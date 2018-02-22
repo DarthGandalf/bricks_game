@@ -39,7 +39,6 @@
 	   for(var i=0; i<BRICK_COLS * BRICK_ROWS; i++) {
 	   	brickGrid[i] = true;
 	   }
-	   brickGrid[17] = false;
 	}
 
 	window.onload = function(){
@@ -64,8 +63,8 @@
 		ballY = canvas.height/2;
 	}
 
-	function moveAll() {
-		ballX+= ballSpeedX;
+	function ballMove (){
+       	ballX+= ballSpeedX;
 		ballY+= ballSpeedY;
 
 		if(ballX < 0){
@@ -81,9 +80,25 @@
 		}
 		if(ballY > canvas.height){
 			ballReset();
-			//ballSpeedY *= -1;
 		}
+	}
 
+	function ballBrickHandling (){
+		var ballBrickCol = Math.floor (ballX / BRICK_W);
+		var ballBrickRow = Math.floor (ballY / BRICK_H);
+		var brickIndexUnderBall = rowColToArrayIndex(ballBrickCol, ballBrickRow);
+		
+		if(ballBrickCol >= 0 && ballBrickCol < BRICK_COLS &&
+			ballBrickRow >=0 && ballBrickRow < BRICK_ROWS){
+
+			if (brickGrid[brickIndexUnderBall]) {
+			brickGrid[brickIndexUnderBall] = false;
+		    ballSpeedY *= -1;
+		   }
+		}
+	}
+
+	function ballPaddleHandling(){
 		var paddleTopEdgeY = canvas.height - PADDLE_DIST_FROM_EDGE;
 		var paddleBottomEdgeY = paddleTopEdgeY + PADDLE_THICKNESS;
 		var paddleLeftEdgeX = paddleX;
@@ -99,8 +114,13 @@
 		    var centerOfPaddleX = paddleX + PADDLE_WIDTH/2;
 		    var ballDistFromPaddleCenterX = ballX - centerOfPaddleX;
 		    ballSpeedX = ballDistFromPaddleCenterX * 0.35;
-
 		}
+	}
+
+	function moveAll() {
+	    ballMove();
+	    ballBrickHandling();
+	    ballPaddleHandling();
 	}
 
 	function rowColToArrayIndex(col, row){
@@ -127,11 +147,6 @@ function drawAll(){
 		colorCircle(ballX,ballY, 10, 'white');
 		colorRect(paddleX, canvas.height - PADDLE_DIST_FROM_EDGE, PADDLE_WIDTH, PADDLE_THICKNESS, 'white');
 		drawBricks();
-
-		var mouseBrickCol = Math.floor (mouseX / BRICK_W);
-		var mouseBrickRow = Math.floor (mouseY / BRICK_H);
-		var brickIndexUnderMouse = rowColToArrayIndex(mouseBrickCol, mouseBrickRow);
-		colorText(mouseBrickCol+","+mouseBrickRow+ ":"+brickIndexUnderMouse, mouseX, mouseY, 'yellow');
 	}
 
 	function colorRect (topLeftX, topLeftY,boxWidth, boxHeight, fillColor) {
