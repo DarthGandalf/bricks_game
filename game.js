@@ -118,24 +118,17 @@ var ballX = 75;
 			   var bothTestsFailed = true;
 
 			   if(prevBrickCol != ballBrickCol){
-			   	   if(isBrickAtColRow(ballBrickCol, ballBrickRow) == false) {
 			   	   ballSpeedX *= -1;
 			   	   bothTestsFailed = false;
-			   	}
 			   }
 
 			   if(prevBrickRow != ballBrickRow){
-			   	   var adjBrickSideTopBot = rowColToArrayIndex(ballBrickCol, prevBrickRow);
 
-			   	   if(isBrickAtColRow(ballBrickCol, ballBrickRow) == false){
                        ballSpeedY *= -1;
                        bothTestsFailed = false;
-                   }
 			   } 
 
 			   if(bothTestsFailed) {
-			   	   ballSpeedX *= -1;
-			   	   ballSpeedY *= -1;ß
 			   }
 		   }
 		}
